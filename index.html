@@ -15,11 +15,8 @@
             <a href="#" class="logo">DJ <span>&amp;</span> Water Services</a>
             <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
             <ul class="nav-links" id="navLinks">
-                <li class="theme-switcher">
-                    <label for="themeToggle">☀️</label>
-                    <input type="checkbox" id="themeToggle" class="sr-only">
-                    <label for="themeToggle" class="toggle-label"></label>
-                    <label for="themeToggle">🌙</label>
+                <li>
+                    <button id="langToggle" class="btn btn-secondary" style="padding: 6px 12px; font-size: 14px;" aria-label="Toggle Language">हिंदी</button>
                 </li>
                 <li><a href="#home">Home</a></li>
                 <li><a href="#services">Services</a></li>
@@ -318,6 +315,42 @@
             <p>&copy; 2025 DJ &amp; Water Services. All rights reserved. | Designed for Excellence</p>
         </div>
     </footer>
+
+    <!-- Hidden Google Translate Element -->
+    <div id="google_translate_element" style="display:none"></div>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en', 
+                includedLanguages: 'en,hi', 
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+    <script>
+        // Custom Language Toggle Logic
+        const langToggle = document.getElementById('langToggle');
+        
+        // Check cookie on load to set correct button text
+        if (document.cookie.includes('googtrans=/en/hi') || document.cookie.includes('googtrans=/auto/hi')) {
+            langToggle.innerText = 'English';
+        }
+
+        langToggle.addEventListener('click', () => {
+            const combo = document.querySelector('.goog-te-combo');
+            if (combo) {
+                const currentLang = combo.value;
+                const newLang = (currentLang === 'hi') ? 'en' : 'hi';
+                combo.value = newLang;
+                combo.dispatchEvent(new Event('change'));
+                langToggle.innerText = (newLang === 'hi') ? 'English' : 'हिंदी';
+            }
+        });
+    </script>
 
     <script>
         // Mobile Menu Toggle

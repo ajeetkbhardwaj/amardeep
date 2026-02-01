@@ -802,6 +802,7 @@ nav {
     display: flex;
     list-style: none;
     gap: var(--space-32);
+    align-items: center;
 }
 
 .nav-links a {
@@ -1521,4 +1522,13 @@ footer {
     .cta-buttons {
         gap: var(--space-12);
     }
+}
+
+/* Hide Google Translate Top Banner */
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
+}
+
+body {
+    top: 0px !important;
 }
