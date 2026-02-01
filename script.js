@@ -63,19 +63,43 @@ bookingForm.addEventListener('submit', (e) => {
     
     // Get form data
     const formData = new FormData(bookingForm);
-    const data = Object.fromEntries(formData);
+    const jsonData = Object.fromEntries(formData.entries());
     
-    // Here you would typically send data to a server
-    console.log('Booking Request:', data);
-    
-    // Show success message
-    successMessage.style.display = 'block';
-    bookingForm.reset();
-    
-    // Hide success message after 5 seconds
-    setTimeout(() => {
-        successMessage.style.display = 'none';
-    }, 5000);
+    // Send data to Formspree
+    fetch(bookingForm.action, {
+        method: 'POST',
+        body: JSON.stringify(jsonData),
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            // Show success message
+            successMessage.style.display = 'block';
+            successMessage.style.backgroundColor = ''; // Reset to default success style
+            successMessage.style.color = ''; 
+            successMessage.style.borderColor = '';
+            successMessage.textContent = "Thank you! Your booking request has been received. We'll contact you within 24 hours.";
+            bookingForm.reset();
+            
+            // Hide success message after 5 seconds
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        } else {
+            throw new Error('Form submission failed');
+        }
+    })
+    .catch(error => {
+        // Show error message with error styling
+        successMessage.style.display = 'block';
+        successMessage.style.backgroundColor = 'rgba(var(--color-error-rgb), 0.1)';
+        successMessage.style.color = 'var(--color-error)';
+        successMessage.style.borderColor = 'var(--color-error)';
+        successMessage.textContent = 'Oops! There was a problem sending your message. Please try again.';
+    });
     
     // Scroll to success message
     successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -160,3 +184,24 @@ const sectionObserver = new IntersectionObserver((entries) => {
 sections.forEach(section => {
     sectionObserver.observe(section);
 });
+
+// Custom Language Toggle Logic
+const langToggle = document.getElementById('langToggle');
+
+if (langToggle) {
+    // Check cookie on load to set correct button text
+    if (document.cookie.includes('googtrans=/en/hi') || document.cookie.includes('googtrans=/auto/hi')) {
+        langToggle.innerText = 'English';
+    }
+
+    langToggle.addEventListener('click', () => {
+        const combo = document.querySelector('.goog-te-combo');
+        if (combo) {
+            const currentLang = combo.value;
+            const newLang = (currentLang === 'hi') ? 'en' : 'hi';
+            combo.value = newLang;
+            combo.dispatchEvent(new Event('change'));
+            langToggle.innerText = (newLang === 'hi') ? 'English' : 'हिंदी';
+        }
+    });
+}
